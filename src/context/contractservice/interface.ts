@@ -18,7 +18,5 @@ export interface IndexPoint {
 }
 
 export interface ContractDetails {
-    loading: boolean 
-    error?: string,
     indexes: Array<IndexPoint>
 }

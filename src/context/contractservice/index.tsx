@@ -17,28 +17,20 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
     // pull in web3 and setup some state
     const { web3, state } = useWeb3();
     const [indexes, setIndexes] = useState<Array<IndexPoint>>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>();
 
     /**
      * HoC. Navigate the contract methods and apply the indexes to a cache. Then 'finally' set it to state
      * @param contract Web3 eth contract
      * @returns void
      */
-    const indexData = (contract) => (indexGroup: IndexGroup) => indexGroup.indexes.forEach(response => {
-        const indexCache: Array<IndexPoint> = [];
-        contract.methods.getIndex(response)
-            .call()
-            .then((data: IndexPoint) => indexCache.push(data))
-            .finally(setIndexes(indexCache));
-    });
+    const indexData = (contract) => (indexGroup: IndexGroup) => Promise.all(indexGroup.indexes.map(response => contract.methods.getIndex(response).call()));
 
     /**
      * HoC traverse the group ids of a contract 
      * @param contract Web3 eth contract
      * @returns void
      */
-    const groupInfo = (contract) => (groupIds) => groupIds.forEach(id => contract.methods.getGroup(id).call().then(indexData(contract)))
+    const groupInfo = (contract) => (groupIds) => Promise.all(groupIds.map(id => contract.methods.getGroup(id).call().then(indexData(contract))))
 
     /**
      * IT: gets contract details
@@ -48,24 +40,17 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
         if(state.state === "CONNECTED" && web3 !== null) {
             const contract = new web3.eth.Contract(abi as any, address);
             
-            contract.methods.getGroupIds().call()
+            contract.methods.getGroupIds()
+            .call()
             .then(groupInfo(contract))
-            .catch(({message}) => setError(message))
-            .finally(() => {
-                console.log(indexes);
-                console.log(loading);
-                console.log(error);
-
-                setLoading(false);
-            });
-        
+            .then(console.log);
         }
     }, [state, web3, groupInfo, indexData, setIndexes]);
 
 
     return (
        
-            <ContractServiceContext.Provider value={{indexes, loading, error}}> 
+            <ContractServiceContext.Provider value={{indexes}}> 
                 {children}
             </ContractServiceContext.Provider>
        
