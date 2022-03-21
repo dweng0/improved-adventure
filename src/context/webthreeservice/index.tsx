@@ -25,12 +25,12 @@ const WebThreeProvider: React.FunctionComponent = ({children}) => {
      useEffect(() => { 
         const provider = (window.ethereum) as MetaMaskInpageProvider;
         if(typeof provider !== undefined) { 
-            setWeb3Status({state: "CONNECTING"});
+            setWeb3Status({state: "FETCHING"});
             provider.request({method: RPC_REQUEST_METHOD})
                 .catch(message => setWeb3Status({state: "ERROR", message}))
                 .finally(() => { 
                     web3.current = new Web3(provider as AbstractProvider);
-                    setWeb3Status({state: "CONNECTED"});
+                    setWeb3Status({state: "IDLE"});
                 });
         } else {
             setWeb3Status({state: "NOMETAMASK"});

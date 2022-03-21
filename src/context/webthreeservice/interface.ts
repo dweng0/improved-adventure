@@ -6,6 +6,6 @@ export interface Web3Context {
 }
 
 export interface ConnectionState { 
-    state: "CONNECTED" | "CONNECTING" | "ERROR" | "NOMETAMASK" | "IDLE",
+    state: "FETCHED" | "FETCHING" | "ERROR" | "NOMETAMASK" | "IDLE",
     message?: string
 }

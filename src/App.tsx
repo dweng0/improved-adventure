@@ -5,11 +5,12 @@ import ColorSwitcher    from "./context/colorswitcher";
 import CssBaseline      from "@mui/material/CssBaseline";
 import Container        from "@mui/material/Container";
 import AppBar           from "./components/appbar";
-import ContractServiceContext   from "./context/contractservice";
+import ContractServiceContext, { useContract }   from "./context/contractservice";
 import WebThreeProvider from "./context/webthreeservice";
 
 import './App.css';
 import { DEFAULT_ADDRESS } from './constants';
+import GridContainer from './components/gridcontainer';
 
 /**
  * App container handles toggling light/dark mode
@@ -64,9 +65,7 @@ const App: React.FunctionComponent = () => {
                     <WebThreeProvider>
                         <ContractServiceContext address={DEFAULT_ADDRESS}>
                             <AppBar />
-                            <div className="container">
-                                <p>test</p>
-                            </div>
+                            <GridContainer/>
                         </ContractServiceContext>
                     </WebThreeProvider>
                 </Container>

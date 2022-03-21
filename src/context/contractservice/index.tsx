@@ -8,7 +8,7 @@ const ContractServiceContext = createContext<ContractDetails | undefined>(undefi
 
 /**
  * 
- * HOC that handles connecting to web3, 
+ * Handles connecting to ethereum net, 
  * IT: provides state for the connection
  * Add different ways to connect to web3 here
  */
@@ -17,40 +17,48 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
     // pull in web3 and setup some state
     const { web3, state } = useWeb3();
     const [indexes, setIndexes] = useState<Array<IndexPoint>>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    
 
     /**
-     * HoC. Navigate the contract methods and apply the indexes to a cache. Then 'finally' set it to state
+     * IT: Promises to return all indexes in a given group id
      * @param contract Web3 eth contract
      * @returns void
+     * @HoC
      */
-    const indexData = (contract) => (indexGroup: IndexGroup) => Promise.all(indexGroup.indexes.map(response => contract.methods.getIndex(response).call()));
+    const fetchIndexData = (contract) => (indexGroup: IndexGroup) => Promise.all(indexGroup.indexes.map(response => contract.methods.getIndex(response).call()));
 
     /**
-     * HoC traverse the group ids of a contract 
+     * IT: promises to return the promises of all groupIds 
      * @param contract Web3 eth contract
      * @returns void
+     * @HoC
      */
-    const groupInfo = (contract) => (groupIds) => Promise.all(groupIds.map(id => contract.methods.getGroup(id).call().then(indexData(contract))))
+    const fetchGroupIds = (contract) => (groupIds) => Promise.all(groupIds.map(id => contract.methods.getGroup(id).call().then(fetchIndexData(contract))))
 
+    const flattenIndexMatrix = (accummulatedIndexes, currentIndexArray) => accummulatedIndexes.concat(currentIndexArray);
+    console.log('hehe');
     /**
      * IT: gets contract details
      * WHEN: web3 is ready
      */
     useEffect(() => { 
-        if(state.state === "CONNECTED" && web3 !== null) {
-            const contract = new web3.eth.Contract(abi as any, address);
-            
+        setLoading(true);
+        if(state.state === "IDLE" && web3 !== null) {
+            const contract = new web3.eth.Contract(abi as any, address);            
             contract.methods.getGroupIds()
             .call()
-            .then(groupInfo(contract))
-            .then(console.log);
+            .then(fetchGroupIds(contract))
+            .then((indexMatrix) => indexMatrix.reduce(flattenIndexMatrix, []))
+            .then(setIndexes)
+            .finally(() => setLoading(false));
+
         }
-    }, [state, web3, groupInfo, indexData, setIndexes]);
-
-
+    }, [setIndexes, state, web3]);
+    
     return (
        
-            <ContractServiceContext.Provider value={{indexes}}> 
+            <ContractServiceContext.Provider value={{indexes, loading, web3}}> 
                 {children}
             </ContractServiceContext.Provider>
        
@@ -59,7 +67,7 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
 
 /**
  * A consumer hook exposes the smart contract context at any layer of component depth provided they are wrapped in a provider(IOC)
- * ContractServiceContext is not exported -on purpose- to control its usage.
+ * ContractProvider is not exported -on purpose- to control its usage.
  */
 export const useContract = (): ContractDetails => { 
     const contractServiceContext = useContext(ContractServiceContext);

@@ -1,3 +1,5 @@
+import { Web3Context } from "../webthreeservice/interface";
+
 export interface ContractProps { 
    address: string
 }
@@ -17,6 +19,7 @@ export interface IndexPoint {
     usdPriceInCents: string
 }
 
-export interface ContractDetails {
-    indexes: Array<IndexPoint>
+export interface ContractDetails extends Partial<Web3Context> {
+    indexes: Array<IndexPoint>,
+    loading: boolean
 }
