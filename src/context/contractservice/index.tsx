@@ -3,6 +3,7 @@ import { ContractDetails, ContractProps } from "./interface";
 import abi                          from "../../contracts/abi/abi.json";
 import { IndexGroup, IndexPoint }   from "../../interfaces";
 import { useMetaMask }                  from "../walletservice";
+import { fetchGroupIds } from "./services";
 
 const ContractServiceContext = createContext<ContractDetails | undefined>(undefined);
 
@@ -18,24 +19,12 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
     const { web3, state } = useMetaMask();
     const [indexes, setIndexes] = useState<Array<Array<IndexPoint>>>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    
 
-    /**
-     * IT: Promises to return all indexes in a given group id
-     * @param contract Web3 eth contract
-     * @returns void
-     * @HoC
-     */
-    const fetchIndexData = (contract) => (indexGroup: IndexGroup) => Promise.all(indexGroup.indexes.map(response => contract.methods.getIndex(response).call()));
-
-    /**
-     * IT: promises to return the promises of all groupIds 
-     * @param contract Web3 eth contract
-     * @returns void
-     * @HoC
-     */
-    const fetchGroupIds = (contract) => (groupIds) => Promise.all(groupIds.map(id => contract.methods.getGroup(id).call().then(fetchIndexData(contract))))
-    
+    // error boundary
+    if(!address) { 
+        throw new Error("No address provided")
+    }
+        
     /**
      * IT: gets contract details
      * WHEN: web3 is ready

@@ -12,14 +12,4 @@ describe("Testing theme toggle button", () => {
         //verify
         expect(getByTestId("Brightness4Icon")).toBeInTheDocument();
     });
-
-    it("Should show the correct icon depending on the theme context provided context switched to dark", () => {
-        //setup
-        //execute
-        // app component switches to dark mode (default it light)
-        const { getByTestId } = render(<App />);
-
-        //verify
-        expect(getByTestId("Brightness7Icon")).toBeInTheDocument();
-    });
 })
