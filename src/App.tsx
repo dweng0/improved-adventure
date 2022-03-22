@@ -42,13 +42,13 @@ const App: React.FunctionComponent = () => {
                 palette: {
                     mode,
                     primary: {
-                        light: '#b29a91',
+                        light: '#f2f3f7',
                         main: '#d8dde3',
                         dark: '#b29a91',
                         contrastText: '#1d1d1e',
                     },
                     secondary: {
-                        light: '#b29a91',
+                        light: '#f2f3f7',
                         main: '#b29a91',
                         dark: '#a07763',
                         contrastText: '#000',

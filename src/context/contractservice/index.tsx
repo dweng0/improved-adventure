@@ -16,8 +16,8 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
     
     // pull in web3 and setup some state
     const { web3, state } = useMetaMask();
-    const [indexes, setIndexes] = useState<Array<IndexPoint>>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [indexes, setIndexes] = useState<Array<Array<IndexPoint>>>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     
 
     /**
@@ -35,24 +35,21 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
      * @HoC
      */
     const fetchGroupIds = (contract) => (groupIds) => Promise.all(groupIds.map(id => contract.methods.getGroup(id).call().then(fetchIndexData(contract))))
-
-    const flattenIndexMatrix = (accummulatedIndexes, currentIndexArray) => accummulatedIndexes.concat(currentIndexArray);
-    console.log('hehe');
+    
     /**
      * IT: gets contract details
      * WHEN: web3 is ready
      */
     useEffect(() => { 
         setLoading(true);
-        if(state.state === "IDLE" && web3 !== null) {
+        //when the wallet is connected
+        if(state.state === "CONNECTED" && web3 !== null) {
             const contract = new web3.eth.Contract(abi as any, address);            
             contract.methods.getGroupIds()
             .call()
             .then(fetchGroupIds(contract))
-            .then((indexMatrix) => indexMatrix.reduce(flattenIndexMatrix, []))
             .then(setIndexes)
             .finally(() => setLoading(false));
-
         }
     }, [setIndexes, state, web3]);
     

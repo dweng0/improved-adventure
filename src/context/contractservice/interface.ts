@@ -20,6 +20,6 @@ export interface IndexPoint {
 }
 
 export interface ContractDetails extends Partial<Web3Context> {
-    indexes: Array<IndexPoint>,
+    indexes: Array<Array<IndexPoint>>,
     loading: boolean
 }

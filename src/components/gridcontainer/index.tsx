@@ -1,19 +1,25 @@
-import { debug } from 'console';
+
 import React from 'react';
 import { useContract } from '../../context/contractservice';
-import Grid from '../grid';
 import CircularProgress from '@mui/material/CircularProgress';
-
+import { WrappedIndexes } from './interface';
+import { wrapIndex } from './services';
+import IndexBlock from '../indexblock';
 
 const GridContainer: React.FunctionComponent = () => { 
     
     const {indexes, loading} = useContract();
-    console.log(loading);
-    if(loading) {
-        return  <div><CircularProgress sx={{margin:"auto"}}/></div>
-    }
 
-    return  <div><CircularProgress sx={{margin:"auto"}}/></div>
+    if(loading) {
+        return  <div><CircularProgress className='fade-in' sx={{margin:"auto"}}/></div>
+    }
+    
+    /**
+     * reduce the array into an object that contains the title for each array
+     */
+    const wrappedIndexes = indexes.reduce<Array<WrappedIndexes>>(wrapIndex, []);
+
+    return  <div className='fade-in'>{wrappedIndexes.map(IndexBlock)}</div>
 }
 
 export default GridContainer;
