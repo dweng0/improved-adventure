@@ -1,4 +1,4 @@
-import { Web3Context } from "../webthreeservice/interface";
+import { Web3Context } from "../walletservice/interface";
 
 export interface ContractProps { 
    address: string

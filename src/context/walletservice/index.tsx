@@ -12,7 +12,7 @@ const WebServiceContext = createContext<Web3Context | undefined>(undefined);
  * IT: provides state for the connection
  * Add different ways to connect to web3 here
  */
-const WebThreeProvider: React.FunctionComponent = ({children}) => { 
+const WalletServiceProvider: React.FunctionComponent = ({children}) => { 
     
     // setup state
     const [web3Status, setWeb3Status] = useState<ConnectionState>({state: "IDLE"});
@@ -25,12 +25,12 @@ const WebThreeProvider: React.FunctionComponent = ({children}) => {
      useEffect(() => { 
         const provider = (window.ethereum) as MetaMaskInpageProvider;
         if(typeof provider !== undefined) { 
-            setWeb3Status({state: "FETCHING"});
+            setWeb3Status({state: "CONNECTING"});
             provider.request({method: RPC_REQUEST_METHOD})
                 .catch(message => setWeb3Status({state: "ERROR", message}))
                 .finally(() => { 
                     web3.current = new Web3(provider as AbstractProvider);
-                    setWeb3Status({state: "IDLE"});
+                    setWeb3Status({state: "CONNECTED"});
                 });
         } else {
             setWeb3Status({state: "NOMETAMASK"});
@@ -51,14 +51,14 @@ const WebThreeProvider: React.FunctionComponent = ({children}) => {
 }
 
 /**
- * A consumer hook exposes the smart contract context at any layer of component depth provided they are wrapped in a provider(IOC)
+ * A consumer hook exposes the metamask context at any layer of component depth provided they are wrapped in a provider(IOC)
  * ContractServiceContext is not exported -on purpose- to control its usage.
  */
-export const useWeb3 = (): Web3Context => { 
+export const useMetaMask = (): Web3Context => { 
     const serviceContext = useContext(WebServiceContext);
     if(serviceContext === undefined) { 
         throw new Error("Please use in conjunction with a context provider")
     }
     return serviceContext;
 }
-export default WebThreeProvider
+export default WalletServiceProvider

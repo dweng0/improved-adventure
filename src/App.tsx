@@ -6,11 +6,12 @@ import CssBaseline      from "@mui/material/CssBaseline";
 import Container        from "@mui/material/Container";
 import AppBar           from "./components/appbar";
 import ContractServiceContext, { useContract }   from "./context/contractservice";
-import WebThreeProvider from "./context/webthreeservice";
+import WalletServiceProvider from "./context/walletservice";
 
 import './App.css';
 import { DEFAULT_ADDRESS } from './constants';
 import GridContainer from './components/gridcontainer';
+import SplashContent from './components/splashcontent';
 
 /**
  * App container handles toggling light/dark mode
@@ -22,7 +23,7 @@ const App: React.FunctionComponent = () => {
     *  Handle toggling of dark mode and light mode
     * ************************************************************************
     */
-    const [mode, setMode] = React.useState<"light" | "dark">("dark");
+    const [mode, setMode] = React.useState<"light" | "dark">("light");
 
     // use a memo to handle toggling, causing app to re render with new mode applied.
     const colorMode = useMemo(
@@ -62,12 +63,15 @@ const App: React.FunctionComponent = () => {
             <ThemeProvider theme={theme}>
                 <Container component="main" maxWidth="xl">
                 <CssBaseline />
-                    <WebThreeProvider>
+                    <WalletServiceProvider>
                         <ContractServiceContext address={DEFAULT_ADDRESS}>
-                            <AppBar />
-                            <GridContainer/>
+                            <AppBar />                            
+                            <div className='main'>
+                                <SplashContent/>
+                                <GridContainer/>
+                            </div>
                         </ContractServiceContext>
-                    </WebThreeProvider>
+                    </WalletServiceProvider>
                 </Container>
             </ThemeProvider>
         </ColorSwitcher.Provider>

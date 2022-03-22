@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { ContractDetails, ContractProps } from "./interface";
 import abi                          from "../../contracts/abi/abi.json";
 import { IndexGroup, IndexPoint }   from "../../interfaces";
-import { useWeb3 }                  from "../webthreeservice";
+import { useMetaMask }                  from "../walletservice";
 
 const ContractServiceContext = createContext<ContractDetails | undefined>(undefined);
 
@@ -15,7 +15,7 @@ const ContractServiceContext = createContext<ContractDetails | undefined>(undefi
 const ContractProvider: React.FunctionComponent<ContractProps> = ({address, children}) => { 
     
     // pull in web3 and setup some state
-    const { web3, state } = useWeb3();
+    const { web3, state } = useMetaMask();
     const [indexes, setIndexes] = useState<Array<IndexPoint>>([]);
     const [loading, setLoading] = useState<boolean>(false);
     
