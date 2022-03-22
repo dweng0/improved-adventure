@@ -7,9 +7,9 @@ import { useMetaMask } from '../../context/walletservice';
  * @returns 
  */
 const WalletConnectButton: React.FunctionComponent = () => { 
-    const { web3, state } = useMetaMask();
+    const { state } = useMetaMask();
     let buttonMessage
-    let icon;
+    
     switch(state.state) {
         case "IDLE": {
             buttonMessage = "Connect Wallet";

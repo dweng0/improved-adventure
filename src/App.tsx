@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useEffect} from 'react';
+import React, { useMemo } from 'react';
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ColorSwitcher    from "./context/colorswitcher";
 import CssBaseline      from "@mui/material/CssBaseline";
 import Container        from "@mui/material/Container";
 import AppBar           from "./components/appbar";
-import ContractServiceContext, { useContract }   from "./context/contractservice";
+import ContractServiceContext  from "./context/contractservice";
 import WalletServiceProvider from "./context/walletservice";
 
 import './App.css';

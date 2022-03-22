@@ -24,7 +24,7 @@ const WalletServiceProvider: React.FunctionComponent = ({children}) => {
     */
      useEffect(() => { 
         const provider = (window.ethereum) as MetaMaskInpageProvider;
-        if(typeof provider !== undefined) { 
+        if(typeof provider !== 'undefined') { 
             setWeb3Status({state: "CONNECTING"});
             provider.request({method: RPC_REQUEST_METHOD})
                 .catch(message => setWeb3Status({state: "ERROR", message}))

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { ContractDetails, ContractProps } from "./interface";
 import abi                          from "../../contracts/abi/abi.json";
-import { IndexGroup, IndexPoint }   from "../../interfaces";
+import { IndexPoint }   from "../../interfaces";
 import { useMetaMask }                  from "../walletservice";
 import { fetchGroupIds } from "./services";
 
@@ -40,7 +40,7 @@ const ContractProvider: React.FunctionComponent<ContractProps> = ({address, chil
             .then(setIndexes)
             .finally(() => setLoading(false));
         }
-    }, [setIndexes, state, web3]);
+    }, [setIndexes, state, web3, address]);
     
     return (
        

@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import BigNumber from 'bignumber.js';
 import React from 'react';
 import { IndexPoint } from '../../context/contractservice/interface';
 import { asBigNumber, formatMarketCap, getDollarsFromCents, getEthFromWei, isLong } from './services';
